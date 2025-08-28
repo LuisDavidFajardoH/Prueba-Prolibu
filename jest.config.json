@@ -5,10 +5,11 @@
   "collectCoverageFrom": ["src/**/*.js", "!src/tests/**", "!src/index.js"],
   "coverageDirectory": "coverage",
   "coverageReporters": ["text", "lcov", "html"],
-  "setupFilesAfterEnv": [],
+  "setupFilesAfterEnv": ["<rootDir>/src/tests/setup.js"],
   "verbose": true,
   "forceExit": true,
   "clearMocks": true,
   "resetMocks": true,
-  "restoreMocks": true
+  "restoreMocks": true,
+  "testTimeout": 10000
 }
