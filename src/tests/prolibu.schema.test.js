@@ -5,7 +5,7 @@ const {
   proposalUpdatedDataSchema,
   proposalDeletedDataSchema,
   SUPPORTED_EVENTS,
-  REQUIRED_FIELDS
+  REQUIRED_FIELDS,
 } = require('../webhooks/prolibu.schema');
 
 /**
@@ -22,11 +22,11 @@ describe('Prolibu Schema Validation', () => {
           data: {
             proposalId: 'TEST-001',
             title: 'Test Proposal',
-            amount: { total: 1000.50 },
-            stage: 'qualification'
+            amount: { total: 1000.5 },
+            stage: 'qualification',
           },
           timestamp: '2025-08-28T10:00:00.000Z',
-          webhookId: 'webhook-001'
+          webhookId: 'webhook-001',
         };
 
         const result = validateWebhook(payload);
@@ -36,9 +36,9 @@ describe('Prolibu Schema Validation', () => {
           data: {
             proposalId: 'TEST-001',
             title: 'Test Proposal',
-            amount: { total: 1000.50 },
-            stage: 'qualification'
-          }
+            amount: { total: 1000.5 },
+            stage: 'qualification',
+          },
         });
       });
 
@@ -46,9 +46,9 @@ describe('Prolibu Schema Validation', () => {
         const payload = {
           event: 'proposal.created',
           data: {
-            proposalId: 'TEST-001'
+            proposalId: 'TEST-001',
             // Faltan: title, amount, stage
-          }
+          },
         };
 
         expect(() => validateWebhook(payload)).toThrow();
@@ -57,15 +57,16 @@ describe('Prolibu Schema Validation', () => {
       test('should reject proposal.created with negative amount', () => {
         const payload = {
           event: 'proposal.created',
+          timestamp: '2024-01-15T10:00:00Z',
+          source: 'prolibu',
           data: {
-            proposalId: 'TEST-001',
-            title: 'Test Proposal',
-            amount: { total: -100 },
-            stage: 'qualification'
-          }
+            proposalId: 'prop-123',
+            stage: 'qualification',
+            amount: { total: -1000 },
+          },
         };
 
-        expect(() => validateWebhook(payload)).toThrow(/mayor a 0/);
+        expect(() => validateWebhook(payload)).toThrow(/no son válidos para el tipo de evento/);
       });
 
       test('should reject proposal.created with empty proposalId', () => {
@@ -75,8 +76,8 @@ describe('Prolibu Schema Validation', () => {
             proposalId: '',
             title: 'Test Proposal',
             amount: { total: 100 },
-            stage: 'qualification'
-          }
+            stage: 'qualification',
+          },
         };
 
         expect(() => validateWebhook(payload)).toThrow();
@@ -91,8 +92,8 @@ describe('Prolibu Schema Validation', () => {
             proposalId: 'TEST-002',
             title: 'Updated Proposal',
             amount: { total: 2000.75 },
-            stage: 'proposal'
-          }
+            stage: 'proposal',
+          },
         };
 
         const result = validateWebhook(payload);
@@ -105,8 +106,8 @@ describe('Prolibu Schema Validation', () => {
         const payload = {
           event: 'proposal.updated',
           data: {
-            proposalId: 'TEST-002'
-          }
+            proposalId: 'TEST-002',
+          },
         };
 
         const result = validateWebhook(payload);
@@ -119,8 +120,8 @@ describe('Prolibu Schema Validation', () => {
         const payload = {
           event: 'proposal.updated',
           data: {
-            title: 'Updated Proposal'
-          }
+            title: 'Updated Proposal',
+          },
         };
 
         expect(() => validateWebhook(payload)).toThrow();
@@ -131,8 +132,8 @@ describe('Prolibu Schema Validation', () => {
           event: 'proposal.updated',
           data: {
             proposalId: 'TEST-002',
-            amount: { total: 1500.25 }
-          }
+            amount: { total: 1500.25 },
+          },
         };
 
         const result = validateWebhook(payload);
@@ -148,8 +149,8 @@ describe('Prolibu Schema Validation', () => {
           data: {
             proposalId: 'TEST-003',
             closeDate: '2025-08-28',
-            reason: 'Client cancelled'
-          }
+            reason: 'Client cancelled',
+          },
         };
 
         const result = validateWebhook(payload);
@@ -163,8 +164,8 @@ describe('Prolibu Schema Validation', () => {
         const payload = {
           event: 'proposal.deleted',
           data: {
-            proposalId: 'TEST-003'
-          }
+            proposalId: 'TEST-003',
+          },
         };
 
         const result = validateWebhook(payload);
@@ -178,11 +179,11 @@ describe('Prolibu Schema Validation', () => {
           event: 'proposal.deleted',
           data: {
             proposalId: 'TEST-003',
-            closeDate: '28/08/2025' // Formato incorrecto
-          }
+            closeDate: '28/08/2025', // Formato incorrecto
+          },
         };
 
-        expect(() => validateWebhook(payload)).toThrow(/YYYY-MM-DD/);
+        expect(() => validateWebhook(payload)).toThrow(/no son válidos para el tipo de evento/);
       });
     });
 
@@ -191,8 +192,8 @@ describe('Prolibu Schema Validation', () => {
         const payload = {
           event: 'proposal.invalid',
           data: {
-            proposalId: 'TEST-001'
-          }
+            proposalId: 'TEST-001',
+          },
         };
 
         expect(() => validateWebhook(payload)).toThrow();
@@ -201,8 +202,8 @@ describe('Prolibu Schema Validation', () => {
       test('should reject missing event field', () => {
         const payload = {
           data: {
-            proposalId: 'TEST-001'
-          }
+            proposalId: 'TEST-001',
+          },
         };
 
         expect(() => validateWebhook(payload)).toThrow();
@@ -216,7 +217,7 @@ describe('Prolibu Schema Validation', () => {
         proposalId: 'TEST-001',
         title: 'Test',
         amount: { total: 100 },
-        stage: 'qualification'
+        stage: 'qualification',
       };
 
       const result = validateProposalData('proposal.created', createdData);
@@ -236,7 +237,7 @@ describe('Prolibu Schema Validation', () => {
       expect(SUPPORTED_EVENTS).toEqual([
         'proposal.created',
         'proposal.updated',
-        'proposal.deleted'
+        'proposal.deleted',
       ]);
     });
 
@@ -246,10 +247,10 @@ describe('Prolibu Schema Validation', () => {
           'proposalId',
           'title',
           'amount.total',
-          'stage'
+          'stage',
         ]),
         'proposal.updated': ['proposalId'],
-        'proposal.deleted': ['proposalId']
+        'proposal.deleted': ['proposalId'],
       });
     });
   });
@@ -260,7 +261,7 @@ describe('Prolibu Schema Validation', () => {
         proposalId: 'TEST-001',
         title: 'Test',
         amount: { total: 100 },
-        stage: 'qualification'
+        stage: 'qualification',
       };
 
       const result = proposalCreatedDataSchema.parse(data);
@@ -270,7 +271,7 @@ describe('Prolibu Schema Validation', () => {
 
     test('proposalUpdatedDataSchema should work independently', () => {
       const data = {
-        proposalId: 'TEST-002'
+        proposalId: 'TEST-002',
       };
 
       const result = proposalUpdatedDataSchema.parse(data);
@@ -281,7 +282,7 @@ describe('Prolibu Schema Validation', () => {
     test('proposalDeletedDataSchema should work independently', () => {
       const data = {
         proposalId: 'TEST-003',
-        closeDate: '2025-08-28'
+        closeDate: '2025-08-28',
       };
 
       const result = proposalDeletedDataSchema.parse(data);

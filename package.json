@@ -4,12 +4,16 @@
   "description": "Microservicio para sincronizar webhooks de Prolibu con Salesforce Opportunities",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "lint": "eslint .",
-    "format": "prettier --write .",
+    "dev": "nodemon src/index.js",
     "test": "jest --runInBand",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --watch --runInBand",
+    "test:coverage": "jest --coverage --runInBand",
+    "test:salesforce": "node test-salesforce-connection.js",
+    "verify:field": "node verify-custom-field.js",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write src/",
     "prepare": "husky install"
   },
   "keywords": [
@@ -23,9 +27,10 @@
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.6.1",
     "express": "^4.18.2",
     "helmet": "^7.0.0",
+    "jsforce": "^3.10.4",
     "pino": "^8.15.0",
     "zod": "^3.22.2"
   },

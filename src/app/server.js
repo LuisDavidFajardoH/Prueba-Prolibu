@@ -8,6 +8,7 @@ const { logger } = require('./libs/logger');
 
 // Importar middlewares
 const { requestLogger, healthCheckLogger, errorHandler, notFound } = require('./middlewares');
+const { salesforceErrorMiddleware } = require('./middlewares/salesforceErrorHandler');
 
 // Importar rutas
 const routes = require('./routes');
@@ -103,6 +104,10 @@ function createServer() {
 
   // ===== MIDDLEWARE DE MANEJO DE ERRORES =====
 
+  // Manejo específico de errores de Salesforce
+  app.use(salesforceErrorMiddleware);
+
+  // Manejo general de errores
   app.use(errorHandler);
 
   return app;

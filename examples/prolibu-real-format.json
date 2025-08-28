@@ -1,0 +1,33 @@
+{
+  "model": "proposal",
+  "action": "update",
+  "url": "/v1/proposal/68b0aea83361c60020e4be6e",
+  "body": {
+    "createdBy": {
+      "firstName": "Q - BMW Bilbao",
+      "lastName": "Manuel",
+      "email": "juan.manuel.garcia@prolibu.com",
+      "id": "5fd282b1321868051ee1d57a"
+    },
+    "updatedBy": "5fd282b1321868051ee1d57a",
+    "currency": "COP",
+    "stage": null,
+    "proposalNumber": "5QNM9P",
+    "title": "Propuesta de prueba real desde Prolibu",
+    "numberOfPayments": 1,
+    "status": "Draft",
+    "amount": 45000,
+    "tax": 0,
+    "total": 45000,
+    "discount": 0,
+    "rating": "Hot",
+    "specialObservations": "Esta es una propuesta de prueba para validar la integración",
+    "createdAt": "2025-08-28T19:31:52.390Z",
+    "updatedAt": "2025-08-28T19:33:52.912Z",
+    "id": "68b0aea83361c60020e4be6e"
+  },
+  "headers": {
+    "authorization": "bearer 0c75f96d-cb41-448e-8923-a5e44478aa00",
+    "content-type": "application/json;charset=UTF-8"
+  }
+}

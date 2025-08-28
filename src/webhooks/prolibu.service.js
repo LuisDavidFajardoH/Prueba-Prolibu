@@ -1,5 +1,6 @@
 const { logger } = require('../app/libs/logger');
 const { mapStageToSalesforce, isStageClosed } = require('../config/stageMap');
+const salesforceService = require('../services/salesforce.service');
 
 /**
  * Servicio para manejar la lógica de negocio de webhooks de Prolibu
@@ -42,27 +43,19 @@ async function handleProposalCreated(proposalData, traceId) {
         : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     };
 
-    // TODO: Integrar con Salesforce (Paso 10)
-    // const salesforceResult = await salesforceService.createOpportunity(opportunityData);
-
-    // STUB: Simular creación exitosa
-    const stubResult = {
-      success: true,
-      salesforceId: `SF_OPP_${Date.now()}`, // ID simulado
-      opportunityData,
-      message: 'Opportunity creada exitosamente (simulado)',
-    };
+    // Integrar con Salesforce
+    const salesforceResult = await salesforceService.createOpportunity(opportunityData, traceId);
 
     serviceLogger.info(
       {
         salesforceStage,
-        salesforceId: stubResult.salesforceId,
+        salesforceId: salesforceResult.salesforceId,
         amount: opportunityData.Amount,
       },
-      'Propuesta creada exitosamente'
+      'Propuesta creada exitosamente en Salesforce'
     );
 
-    return stubResult;
+    return salesforceResult;
   } catch (error) {
     serviceLogger.error(
       {
@@ -123,27 +116,18 @@ async function handleProposalUpdated(proposalData, traceId) {
       updateData.Description = proposalData.description;
     }
 
-    // TODO: Integrar con Salesforce (Paso 10)
-    // const salesforceResult = await salesforceService.updateOpportunity(updateData);
-
-    // STUB: Simular actualización exitosa
-    const stubResult = {
-      success: true,
-      salesforceId: `SF_OPP_${proposalData.proposalId}`, // ID simulado
-      updateData,
-      fieldsUpdated: Object.keys(updateData).filter(key => key !== 'Prolibu_External_Id__c'),
-      message: 'Opportunity actualizada exitosamente (simulado)',
-    };
+    // Integrar con Salesforce
+    const salesforceResult = await salesforceService.updateOpportunity(updateData, traceId);
 
     serviceLogger.info(
       {
-        fieldsUpdated: stubResult.fieldsUpdated,
-        salesforceId: stubResult.salesforceId,
+        fieldsUpdated: Object.keys(updateData).filter(key => key !== 'Prolibu_External_Id__c'),
+        salesforceId: salesforceResult.salesforceId,
       },
-      'Propuesta actualizada exitosamente'
+      'Propuesta actualizada exitosamente en Salesforce'
     );
 
-    return stubResult;
+    return salesforceResult;
   } catch (error) {
     serviceLogger.error(
       {
@@ -176,43 +160,22 @@ async function handleProposalDeleted(proposalData, traceId) {
   serviceLogger.info('Procesando eliminación de propuesta');
 
   try {
-    // Preparar datos para marcar como cerrada perdida
-    const deleteData = {
-      Prolibu_External_Id__c: proposalData.proposalId,
-      StageName: 'Closed Lost',
-      CloseDate: proposalData.closeDate || new Date().toISOString().split('T')[0],
-      // Añadir razón en descripción si está disponible
-      Description: proposalData.reason
-        ? `Propuesta eliminada: ${proposalData.reason}`
-        : 'Propuesta eliminada desde Prolibu',
-    };
-
-    // TODO: Integrar con Salesforce (Paso 10)
-    // Opción 1: Actualizar a "Closed Lost"
-    // const salesforceResult = await salesforceService.updateOpportunity(deleteData);
-
-    // Opción 2: Eliminar físicamente (menos recomendado)
-    // const salesforceResult = await salesforceService.deleteOpportunity(proposalData.proposalId);
-
-    // STUB: Simular eliminación/cierre exitoso
-    const stubResult = {
-      success: true,
-      salesforceId: `SF_OPP_${proposalData.proposalId}`, // ID simulado
-      action: 'marked_as_closed_lost', // o 'physically_deleted'
-      deleteData,
-      message: 'Opportunity marcada como Closed Lost exitosamente (simulado)',
-    };
+    // Integrar con Salesforce - Marcar como Closed Lost
+    const salesforceResult = await salesforceService.markOpportunityAsClosedLost(
+      proposalData.proposalId,
+      traceId,
+      proposalData.reason
+    );
 
     serviceLogger.info(
       {
-        action: stubResult.action,
-        salesforceId: stubResult.salesforceId,
+        salesforceId: salesforceResult.salesforceId,
         reason: proposalData.reason,
       },
-      'Propuesta eliminada exitosamente'
+      'Propuesta marcada como Closed Lost exitosamente en Salesforce'
     );
 
-    return stubResult;
+    return salesforceResult;
   } catch (error) {
     serviceLogger.error(
       {

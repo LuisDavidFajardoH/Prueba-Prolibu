@@ -17,7 +17,7 @@ const envSchema = z.object({
     .default('3000'),
 
   // Configuración de logging
-  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
+  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
 
   // Variables de Salesforce (opcionales por ahora, requeridas en paso posterior)
   SF_LOGIN_URL: z.string().url().optional(),

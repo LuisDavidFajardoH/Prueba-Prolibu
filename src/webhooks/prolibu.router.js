@@ -1,5 +1,6 @@
 const express = require('express');
 const { handleProlibuWebhook, healthCheck, getSupportedEvents } = require('./prolibu.controller');
+const { prolibuWebhookAdapter } = require('./prolibu.adapter');
 
 /**
  * Router para manejar todos los endpoints relacionados con webhooks de Prolibu
@@ -17,7 +18,7 @@ const router = express.Router();
  *
  * Body: Ver schemas en prolibu.schema.js
  */
-router.post('/', handleProlibuWebhook);
+router.post('/', prolibuWebhookAdapter, handleProlibuWebhook);
 
 /**
  * GET /webhooks/prolibu/health

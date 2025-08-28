@@ -1,6 +1,9 @@
 const express = require('express');
-const prolibsWebhookRouter = require('../webhooks/prolibu.router');
 const { config } = require('./libs/env');
+
+// Importar routers
+const prolibuWebhookRouter = require('../webhooks/prolibu.router');
+const salesforceRouter = require('../salesforce/salesforce.router');
 
 /**
  * Configuración de rutas principales de la aplicación
@@ -23,6 +26,9 @@ router.get('/', (req, res) => {
       health: 'GET /health',
       webhookHealth: 'GET /webhooks/prolibu/health',
       webhookInfo: 'GET /webhooks/prolibu/info',
+      salesforceHealth: 'GET /salesforce/health',
+      salesforceReconnect: 'POST /salesforce/reconnect',
+      getOpportunity: 'GET /salesforce/opportunity/:prolibuId',
     },
     documentation: {
       examples: '/examples/',
@@ -76,6 +82,9 @@ router.get('/ping', (req, res) => {
  */
 
 // Webhooks de Prolibu en /webhooks/prolibu
-router.use('/webhooks/prolibu', prolibsWebhookRouter);
+router.use('/webhooks/prolibu', prolibuWebhookRouter);
+
+// Endpoints de Salesforce en /salesforce
+router.use('/salesforce', salesforceRouter);
 
 module.exports = router;
