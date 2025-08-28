@@ -1,0 +1,15 @@
+{
+  "event": "proposal.updated",
+  "data": {
+    "proposalId": "PROP-2025-001",
+    "title": "Desarrollo de Sistema CRM para Empresa ABC - Actualizado",
+    "amount": {
+      "total": 28000.75,
+      "currency": "USD"
+    },
+    "stage": "proposal",
+    "description": "Proyecto actualizado con módulos adicionales de reporting y analytics"
+  },
+  "timestamp": "2025-08-28T14:15:30.000Z",
+  "webhookId": "wh_updated_20250828_002"
+}

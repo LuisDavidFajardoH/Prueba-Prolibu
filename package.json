@@ -40,8 +40,11 @@
     "supertest": "^6.3.3"
   },
   "lint-staged": {
-    "*.{js,json}": [
+    "*.js": [
       "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
   },

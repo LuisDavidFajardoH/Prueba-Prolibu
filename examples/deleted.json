@@ -1,0 +1,10 @@
+{
+  "event": "proposal.deleted",
+  "data": {
+    "proposalId": "PROP-2025-001",
+    "closeDate": "2025-08-28",
+    "reason": "Cliente decidió no continuar con el proyecto"
+  },
+  "timestamp": "2025-08-28T16:45:00.000Z",
+  "webhookId": "wh_deleted_20250828_003"
+}

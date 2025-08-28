@@ -1,0 +1,17 @@
+{
+  "event": "proposal.created",
+  "data": {
+    "proposalId": "PROP-2025-001",
+    "title": "Desarrollo de Sistema CRM para Empresa ABC",
+    "amount": {
+      "total": 25000.5,
+      "currency": "USD"
+    },
+    "stage": "qualification",
+    "description": "Proyecto de desarrollo de sistema CRM personalizado con integración a servicios existentes",
+    "clientId": "CLIENT-ABC-123",
+    "clientName": "Empresa ABC S.A."
+  },
+  "timestamp": "2025-08-28T10:30:00.000Z",
+  "webhookId": "wh_created_20250828_001"
+}
